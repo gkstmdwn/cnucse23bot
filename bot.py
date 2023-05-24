@@ -7,10 +7,10 @@ import sys
 import time
 import requests #pip install requests
 import numpy as np
-import genshin as genshin # pip install genshin
 import pickle
 
 from token_1 import Discord_Token
+import Functions.second_to_hhmmss as STH
 
 # python 3.8 or higher
 # discordpy 2.2.0
@@ -29,7 +29,7 @@ tree = app_commands.CommandTree(client)
 
 
 
-
+# General Information Command
 @tree.command(name="info", description="General Information", 
               guild=discord.Object(id=1110447281011961856))
 async def info(interaction: discord.Interaction) -> None:
@@ -38,15 +38,65 @@ async def info(interaction: discord.Interaction) -> None:
     Args:
         interaction (discord.Interaction): Interaction
     """
-    await interaction.response.send_message(f"Huyuko bot ver. {version}, developed by CNUCSE23")
+    await interaction.response.send_message(f"CNUCSE23 bot ver. {version}, developed by CNUCSE23")
 
+# Uptime Command
+@tree.command(name= "uptime", description="returns uptime of AI Huyuko bot",
+              guild=discord.Object(id=1110447281011961856))
+async def uptime(interaction: discord.Interaction) -> None:
+    """Sends Uptime
+    
+    Args:
+        interaction (discord.Interaction): Interaction
+    """
+    second = int(time.time()-start_time)
+    sth = STH.format_seconds_to_hhmmss(seconds=second)
+    await interaction.response.send_message("uptime: "+ str(sth))
 
-
-
+# Weather Command
+@tree.command(name = "날씨", description="유성구의 날씨 정보를 보내드립니다",
+              guild=discord.Object(id=1110447281011961856))
+async def weather(interaction: discord.Interaction) -> None:
+    """Sends current weather
+    
+    Args:
+        interaction (discord.Interaction): _description_
+        city (str): _description_
+    """
+    api_key = "340c5633e643b9e3390c96873b6791aa"
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    complete_url = base_url + "appid=" + api_key + "&q=" + "Daejeon"
+    response = requests.get(complete_url)
+    x = response.json()
+    if x["cod"] != "404":
+        y = x["main"]
+        current_temperature = y["temp"]
+        current_temperature_celsiuis = str(round(current_temperature - 273.15))
+        current_pressure = y["pressure"]
+        current_humidity = y["humidity"]
+        z = x["weather"]
+        weather_description = z[0]["description"]
+        weather_description = z[0]["description"]
+        embed = discord.Embed(title=f"대전의 날씨입니당",
+                            color=interaction.guild.me.top_role.color,)
+                            # timestamp=interaction.message.created_at,)
+        embed.add_field(name="날씨",
+                        value=f"**{weather_description}**", inline=False)
+        embed.add_field(name="기온(C)",
+                        value=f"**{current_temperature_celsiuis}°C**", inline=False)
+        embed.add_field(name="습도(%)",
+                        value=f"**{current_humidity}%**", inline=False)
+        embed.add_field(name="기압(hPa)",
+                        value=f"**{current_pressure}hPa**", inline=False)
+        embed.set_thumbnail(url="https://i.ibb.co/CMrsxdX/weather.png")
+        await interaction.response.send_message(embed=embed)
+    else:
+        await interaction.response.send_message("영어로 도시이름을 다시 쳐주세요...ㅠ")
 
 @client.event
 async def on_ready():
-    """activated when bot is online
+    """
+    activated when bot is online
     """
     print('We have logged in as {}'.format(client))
     print('Bot name: {}'.format(client.user.name))
