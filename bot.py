@@ -9,10 +9,10 @@ import requests #pip install requests
 import numpy as np
 import pickle
 
-from token_1 import Discord_Token
 import Functions.second_to_hhmmss as STH
+import Functions.PickRandom
 from Functions.crawl_today_menu import today_menu
-
+from token_1 import Discord_Token
 
 # python 3.8 or higher
 # discordpy 2.2.0
@@ -95,7 +95,7 @@ async def weather(interaction: discord.Interaction) -> None:
     else:
         await interaction.response.send_message("영어로 도시이름을 다시 쳐주세요...ㅠ")
 
-
+# Crawl Today's Menu
 @tree.command(name = "학식", description="오늘의 학식 정보를 알려드립니다",
               guild=discord.Object(id=1110447281011961856))
 @app_commands.choices(arg1=[
@@ -118,11 +118,34 @@ async def Food(interaction = discord.Interaction, *,
                arg3:app_commands.Choice[str]):
     menu = today_menu(arg1.value, arg2.value, arg3.value)
     await interaction.response.send_message(str(menu))
+
+# Roll dice
+@tree.command(name = "주사위", description="주사위를 굴려드립니당",
+              guild=discord.Object(id=911087423130320918))
+async def roll_dice(interaction: discord.Interaction) -> None:
+    """Rolls dice and returns a random number between 1 and 6
     
+    Args:
+        interaction (discord.Interaction): Interaction
+    """
+    dice = Functions.PickRandom.roll_dice()
+    await interaction.response.send_message(dice)
 
+# Restarting Command
+def restart_bot():
+    """Restart bot.py
+    """
+    os.execv(sys.executable, ['python'] + sys.argv)
+@tree.command(name="restart", description="restart bot",
+              guild=discord.Object(id=911087423130320918))
+async def restart(Interaction: discord.Interaction) -> None:
+    """Command for Restarting Huyuko bot
 
-
-
+    Args:
+        Interaction (discord.Interaction): Interaction
+    """
+    await Interaction.response.send_message("Restarting bot...")
+    restart_bot()
 
 @client.event
 async def on_ready():
@@ -147,16 +170,5 @@ async def on_member_join(member):
     if guild.system_channel is not None:
         to_send = f'{member.mention}님 {guild.name}에 어서오세요!'
         await guild.system_channel.send(to_send)
-
-
-
-
-
-
-
-
-
-
-
 
 client.run(Discord_Token)
