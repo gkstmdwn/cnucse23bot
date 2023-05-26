@@ -12,6 +12,8 @@ import pickle
 import Functions.second_to_hhmmss as STH
 import Functions.PickRandom
 from Functions.crawl_today_menu import today_menu
+from Chat_OpenAI import get_chat
+from Image_PyKakao import generate_image
 from token_1 import Discord_Token
 
 # python 3.8 or higher
@@ -147,6 +149,14 @@ async def restart(Interaction: discord.Interaction) -> None:
     await Interaction.response.send_message("Restarting bot...")
     restart_bot()
 
+@tree.command(name="이미지", description='이미지를 생성해드립니다',
+              guild=discord.Object(id=1110447281011961856))
+async def image(Interaction:discord.Interaction, *, query:str) -> None:
+    generate_image(query)
+    with open('my_image.png', 'rb') as f:
+        picture = discord.File(f)
+        await Interaction.channel.send(file=picture)
+
 @client.event
 async def on_ready():
     """
@@ -170,5 +180,14 @@ async def on_member_join(member):
     if guild.system_channel is not None:
         to_send = f'{member.mention}님 {guild.name}에 어서오세요!'
         await guild.system_channel.send(to_send)
+
+@client.event
+async def on_message(message:discord.message) -> None:
+    if message.author == client.user:
+        return
+    if message.mentions:
+        if message.mentions[0].id == 1110448602087686154:
+            result = get_chat(message.content)
+            await message.channel.send(result)
 
 client.run(Discord_Token)
