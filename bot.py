@@ -121,7 +121,7 @@ async def Food(interaction = discord.Interaction, *,
 
 # Roll dice
 @tree.command(name = "주사위", description="주사위를 굴려드립니당",
-              guild=discord.Object(id=911087423130320918))
+              guild=discord.Object(id=1110447281011961856))
 async def roll_dice(interaction: discord.Interaction) -> None:
     """Rolls dice and returns a random number between 1 and 6
     
@@ -137,7 +137,7 @@ def restart_bot():
     """
     os.execv(sys.executable, ['python'] + sys.argv)
 @tree.command(name="restart", description="restart bot",
-              guild=discord.Object(id=911087423130320918))
+              guild=discord.Object(id=1110447281011961856))
 async def restart(Interaction: discord.Interaction) -> None:
     """Command for Restarting Huyuko bot
 
