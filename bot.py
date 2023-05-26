@@ -11,6 +11,8 @@ import pickle
 
 from token_1 import Discord_Token
 import Functions.second_to_hhmmss as STH
+from Functions.crawl_today_menu import today_menu
+
 
 # python 3.8 or higher
 # discordpy 2.2.0
@@ -92,6 +94,35 @@ async def weather(interaction: discord.Interaction) -> None:
         await interaction.response.send_message(embed=embed)
     else:
         await interaction.response.send_message("영어로 도시이름을 다시 쳐주세요...ㅠ")
+
+
+@tree.command(name = "학식", description="오늘의 학식 정보를 알려드립니다",
+              guild=discord.Object(id=1110447281011961856))
+@app_commands.choices(arg1=[
+    app_commands.Choice(name='아침', value='breakfast'),
+    app_commands.Choice(name='점심', value='launch'),
+    app_commands.Choice(name='저녁', value='dinner')
+])
+@app_commands.choices(arg2=[
+    app_commands.Choice(name='학생', value='student'),
+    app_commands.Choice(name='직원', value='staff')
+])
+@app_commands.choices(arg3=[
+    app_commands.Choice(name='2학', value='2'),
+    app_commands.Choice(name='3학', value='3'),
+    app_commands.Choice(name='4학', value='4')
+])
+async def Food(interaction = discord.Interaction, *,
+               arg1:app_commands.Choice[str],
+               arg2:app_commands.Choice[str],
+               arg3:app_commands.Choice[str]):
+    menu = today_menu(arg1.value, arg2.value, arg3.value)
+    await interaction.response.send_message(str(menu))
+    
+
+
+
+
 
 @client.event
 async def on_ready():
