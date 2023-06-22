@@ -12,8 +12,8 @@ import pickle
 import Functions.second_to_hhmmss as STH
 import Functions.PickRandom
 from Functions.crawl_today_menu import today_menu
-from Chat_OpenAI import get_chat
-from Image_PyKakao import generate_image
+from Chat_OpenAI import get_chat # pip install openai
+from Image_PyKakao import generate_image # pip install PyKakao
 from token_1 import Discord_Token
 
 # python 3.8 or higher
@@ -35,7 +35,7 @@ tree = app_commands.CommandTree(client)
 
 # General Information Command
 @tree.command(name="info", description="General Information", 
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 async def info(interaction: discord.Interaction) -> None:
     """Sends general information of Huyuko
     
@@ -46,7 +46,7 @@ async def info(interaction: discord.Interaction) -> None:
 
 # Uptime Command
 @tree.command(name= "uptime", description="returns uptime of AI Huyuko bot",
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 async def uptime(interaction: discord.Interaction) -> None:
     """Sends Uptime
     
@@ -59,7 +59,7 @@ async def uptime(interaction: discord.Interaction) -> None:
 
 # Weather Command
 @tree.command(name = "날씨", description="유성구의 날씨 정보를 보내드립니다",
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 async def weather(interaction: discord.Interaction) -> None:
     """Sends current weather
     
@@ -99,7 +99,7 @@ async def weather(interaction: discord.Interaction) -> None:
 
 # Crawl Today's Menu
 @tree.command(name = "학식", description="오늘의 학식 정보를 알려드립니다",
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 @app_commands.choices(arg1=[
     app_commands.Choice(name='아침', value='breakfast'),
     app_commands.Choice(name='점심', value='launch'),
@@ -123,7 +123,7 @@ async def Food(interaction = discord.Interaction, *,
 
 # Roll dice
 @tree.command(name = "주사위", description="주사위를 굴려드립니당",
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 async def roll_dice(interaction: discord.Interaction) -> None:
     """Rolls dice and returns a random number between 1 and 6
     
@@ -139,7 +139,7 @@ def restart_bot():
     """
     os.execv(sys.executable, ['python'] + sys.argv)
 @tree.command(name="restart", description="restart bot",
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 async def restart(Interaction: discord.Interaction) -> None:
     """Command for Restarting Huyuko bot
 
@@ -150,7 +150,7 @@ async def restart(Interaction: discord.Interaction) -> None:
     restart_bot()
 
 @tree.command(name="이미지", description='이미지를 생성해드립니다',
-              guild=discord.Object(id=1110447281011961856))
+              guild=discord.Object(id=1102965191580332092))
 async def image(Interaction:discord.Interaction, *, query:str) -> None:
     generate_image(query)
     with open('my_image.png', 'rb') as f:
@@ -166,8 +166,8 @@ async def on_ready():
     print('Bot name: {}'.format(client.user.name))
     print('Bot ID: {}'.format(client.user.id))
     
-    await tree.sync(guild=discord.Object(id=1110447281011961856))
-    log_channel = client.get_channel(1110447281011961859)  # '로그'Channel
+    await tree.sync(guild=discord.Object(id=1102965191580332092))
+    log_channel = client.get_channel(1107199193967247400)
     await log_channel.send('Online!')
 
     global start_time
